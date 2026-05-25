@@ -1,5 +1,7 @@
 # factory-sandbox
 
+[![CI](https://github.com/billyronks/factory-sandbox/actions/workflows/ci.yml/badge.svg)](https://github.com/billyronks/factory-sandbox/actions)
+
 Target service for the Agent Factory. The factory's agents modify this repo.
 
 ## Endpoints
