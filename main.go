@@ -18,6 +18,7 @@ var (
 
 func main() {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/healthz", healthzHandler)
 	mux.HandleFunc("/version", versionHandler)
 
 	srv := &http.Server{
@@ -43,6 +44,14 @@ func main() {
 	if err := srv.Shutdown(ctx); err != nil {
 		fmt.Fprintf(os.Stderr, "shutdown error: %v\n", err)
 	}
+}
+
+func healthzHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"status":  "ok",
+		"version": version,
+	})
 }
 
 func versionHandler(w http.ResponseWriter, r *http.Request) {
