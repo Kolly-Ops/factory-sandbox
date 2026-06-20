@@ -7,6 +7,26 @@ import (
 	"testing"
 )
 
+func TestReadyzHandler(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/readyz", nil)
+	w := httptest.NewRecorder()
+
+	readyzHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", w.Code)
+	}
+
+	var resp map[string]string
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
+		t.Fatalf("decode: %v", err)
+	}
+
+	if resp["status"] != "ready" {
+		t.Errorf("expected status ready, got %s", resp["status"])
+	}
+}
+
 func TestVersionHandler(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/version", nil)
 	w := httptest.NewRecorder()
