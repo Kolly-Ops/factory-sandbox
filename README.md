@@ -11,6 +11,7 @@ Target service for the Agent Factory. The factory's agents modify this repo.
 ## Usage
 
 ```bash
+# Build and test the service locally
 make test    # run tests
 make build   # compile binary
 make run     # build and run
