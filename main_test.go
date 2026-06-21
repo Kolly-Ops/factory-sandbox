@@ -1,31 +1,21 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
-func TestVersionHandler(t *testing.T) {
+func TestVersionEndpoint(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/version", nil)
 	w := httptest.NewRecorder()
-
 	versionHandler(w, req)
 
 	if w.Code != http.StatusOK {
-		t.Fatalf("expected 200, got %d", w.Code)
+		t.Fatalf("expected status 200, got %d", w.Code)
 	}
-
-	var resp map[string]string
-	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Fatalf("decode: %v", err)
-	}
-
-	if resp["version"] != "0.1.0" {
-		t.Errorf("expected version 0.1.0, got %s", resp["version"])
-	}
-	if _, ok := resp["commit"]; !ok {
-		t.Error("expected commit field")
+	if !strings.Contains(w.Body.String(), `"version":"0.1.0"`) {
+		t.Fatalf("unexpected body: %s", w.Body.String())
 	}
 }

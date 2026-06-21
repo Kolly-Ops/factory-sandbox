@@ -1,10 +1,10 @@
 .PHONY: test build run
 
 test:
-	go test ./... -v
+	go test ./...
 
 build:
-	go build -ldflags="-X main.commit=$$(git rev-parse --short HEAD)" -o bff-sample .
+	go build -o factory-sandbox .
 
 run: build
-	./bff-sample
+	./factory-sandbox

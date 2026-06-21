@@ -1,3 +1,3 @@
-module github.com/billyronks/factory-sandbox
+module github.com/Kolly-Ops/factory-sandbox
 
-go 1.23
+go 1.21
