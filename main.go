@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 	"time"
 )
@@ -18,7 +19,9 @@ var (
 
 func main() {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/healthz", healthHandler)
 	mux.HandleFunc("/version", versionHandler)
+	mux.HandleFunc("/metrics", metricsHandler)
 
 	srv := &http.Server{
 		Addr:              ":8080",
@@ -45,10 +48,23 @@ func main() {
 	}
 }
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+}
+
 func versionHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"version": version,
 		"commit":  commit,
+	})
+}
+
+func metricsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"goroutines": runtime.NumGoroutine(),
+		"go_version": runtime.Version(),
 	})
 }
